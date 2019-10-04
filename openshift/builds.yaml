@@ -1,0 +1,33 @@
+---
+kind: "BuildConfig"
+apiVersion: "v1"
+metadata:
+  name: "srt-proxy" 
+spec:
+  runPolicy: "Serial" 
+  triggers: 
+    -
+      type: "GitHub"
+      github:
+        secret: "git"
+    - type: "Generic"
+      generic:
+        secret: "git"
+    -
+      type: "ImageChange"
+  source:
+    git:
+      ref: master 
+      uri: "ssh://git@git.bestbuy.com/srt/srt-proxy.git"
+    sourceSecret:
+      name: git
+    type: "Git"
+  strategy: 
+    type: "Docker"
+    dockerStrategy:
+      dockerfilePath: ./Dockerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'srt-proxy:latest'
+---
